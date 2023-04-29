@@ -238,27 +238,33 @@ svg {
 }
 
 @media (max-width: 620px) {
+
+    .imgWrap img {
+        display: none;
+    }
+
+    .imgWrap {
+       display: none;
+    }
+
     .textCont h2 {
         font-family: 'Roboto', sans-serif;  
         color: whitesmoke;
         font-size: 35px;
     }
-
-    .container{
-        height: 90vh;
-    }
-
+    
     .imgWrap2 {
-        width: 100px;
+        width: 280px;
         border: 6px solid #15cfa0;
-        height: 100px;
-        object-fit: cover;
+        height: 290px;
+        margin-top: 20px;
+        margin-bottom: 20px;
         border-radius: 60%;
     }
 
     .imgWrap2 img {
-        width: 100px;
-        height: 100px;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         border-radius: 60%;
     }  
@@ -268,7 +274,8 @@ svg {
         width: 100%;
         display: flex;
         margin: 0 auto;
-        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
         
     }
 
@@ -277,25 +284,14 @@ svg {
         height: 100px;
         border: 6px solid #D2ED64;
         border-radius: 60%;
-        position: relative;
-        left: 0px;
+       /* position: relative;
+        left: 20px;
         top: 50px;
-        z-index: 10;
+        z-index: 10;*/
     }
 
     #img4 {
-        border: 5px solid #FF9E1B;
-        width: 90px;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 60%;
-        position: relative;
-        top: 0px;
-        right: 0px;
-        z-index: 20;
-        position: relative;
-        top: 68px;
-        left: 17px;   
+        display: none; 
     } 
 }
 
