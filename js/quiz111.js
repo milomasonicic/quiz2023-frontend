@@ -4,21 +4,6 @@ const urlAnswers = "http://localhost:8099/api/answers"
 const correctAnswers = "http://localhost:8099/api/answersCorrect"
 
 var resArr = []
-corrArr = []
-
-//compare arrs
-function compareArr(a, b) {
-    var count = 0
-  for(var i = 0; i<a.length; i++) {
-    for(var j = 0; j<b.length; j++) {
-        if(a[i] == b[j]) {
-            count++
-        }
-    }
-  }
-
-  return count
-}
 
 function addDiv(question){
     const div = document.createElement('div')
@@ -34,15 +19,14 @@ function addDiv(question){
             const div1 = document.createElement('button') 
             div1.classList.add('answer')
             
-
             div1.innerHTML = `
             <p>${answer.answer}</p>
             `
+            div1.setAttribute("value", answer.id ) 
             div1.addEventListener("click", function() {
-                var choosenAnw = div1.innerText
-                resArr.push(choosenAnw);
-                div1.classList.add('bgcolor')
-                //console.log(resArr);        
+                var chosenVal = div1.value 
+                resArr.push(chosenVal);
+                div1.classList.add('bgcolor')     
                 var buttons = div.querySelectorAll('button.answer')
                for(var i = 0; i<buttons.length; i++) {
                     buttons[i].disabled = true
@@ -50,8 +34,8 @@ function addDiv(question){
                           
             })
             
-            
             div.appendChild(div1)
+            
         }
     })
     
@@ -83,27 +67,11 @@ async function getAnswers(){
     }
 }
 
-async function getCorrectAnswers(){
-    try {
-        const {data} = await axios.get(correctAnswers)
-        var data1 = JSON.stringify(data)
-        localStorage.setItem("tacniodgovori", data1)          
-        
-
-    } catch(e){
-        console.error(e)
-    }
-}
-
-
 getQuestions()
 getAnswers()
 
 var disply = JSON.parse(localStorage.getItem("pitanja")) 
 //document.body.append(disply)
-
-//var odgovori = JSON.parse(localStorage.getItem("odgovori")) 
-
 
 disply.forEach(function(displ) {
     addDiv(displ)
@@ -113,35 +81,42 @@ var finalBtn = document.getElementById("finalBtn")
 
 finalBtn.addEventListener("click", function(){
     
+    var compare = 0;
+    
     if(resArr.length< 7){
         alert("Please choose your answers")
         location.reload()
         window.scrollTo({ top: 0});
     } else {
-        getCorrectAnswers()
         
-        var correctAnswersToCompare = JSON.parse(localStorage.getItem("tacniodgovori"))
-        correctAnswersToCompare.forEach(function(correctAnswerToCompare){
-            corrArr.push(correctAnswerToCompare.answer) 
-            console.log(corrArr)
-        })
+        var resultdiv = document.createElement("div") 
+        resultdiv.classList.add("resultdiv")
+        document.body.appendChild(resultdiv) 
+                
+        var par = document.createElement("p")
+        par.classList.add("par")
+        par.innerText = `Correct answers: ${compare}`
+        resultdiv.appendChild(par)
+            
+        for(var i = 0; i<resArr.length; i++) {      
+        //var temp = getCorrectAnswers(resArr[i]);
+            axios.get(correctAnswers + "?id=" + resArr[i])
+            .then(function(response){
+            //console.log(response.data.correct)
+                        
+                if(response.data.correct == 1) {
+                     
+                compare ++                   
+                //console.log(compare)    
+                }
+                par.innerText = `Correct answers: ${compare}`
+                
+            })
+          
+        }
+        
     }
-    console.log(resArr)
-    var compare = compareArr(resArr, corrArr); 
-    console.log(compare)
-
     finalBtn.disabled = true 
-    
-
-    var resultdiv = document.createElement("div") 
-    resultdiv.classList.add("resultdiv")
-    document.body.appendChild(resultdiv) 
-
-    var par = document.createElement("p")
-    par.classList.add("par")
-    par.innerText = `Correct answers: ${compare}`
-    resultdiv.appendChild(par)
-
     var refresh = document.createElement("button")
     refresh.classList.add("refresh")
     refresh.innerText = "Play again"
